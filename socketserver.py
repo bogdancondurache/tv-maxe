@@ -5,7 +5,7 @@ nrcon = 5
 class SocketServer:
 	def __init__(self, tvmaxe):
 		self.tvmaxe = tvmaxe
-		self.s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		for x in range(1, 100):
 			try:
 				self.s.bind('\0tvmaxe' + str(x))

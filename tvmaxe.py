@@ -3,7 +3,7 @@
 
 import gettext
 import locale
-import gtk.glade
+# import gtk.glade
 import os
 GETTEXT_DOMAIN = 'tvmaxe'
 try:
@@ -15,9 +15,9 @@ try:
     locale.setlocale(locale.LC_ALL, '')
 except:
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-for module in gtk.glade, gettext:
-    module.bindtextdomain(GETTEXT_DOMAIN, LOCALE_PATH)
-    module.textdomain(GETTEXT_DOMAIN)
+# for module in gtk.glade, gettext:
+#     module.bindtextdomain(GETTEXT_DOMAIN, LOCALE_PATH)
+#     module.textdomain(GETTEXT_DOMAIN)
 
 
 def translate(text):
@@ -351,10 +351,12 @@ class TVMaxe:
         self.players = {}
         liststore = self.gui.get_object('liststore2')
         drawable = self.gui.get_object('drawingarea1')
+        xid = None
         if drawable.window:
-            xid = drawable.window.xid
-        else:
-            xid = None
+            if sys.platform == "darwin":
+                xid = drawable.window.nsview
+            else:
+                xid = drawable.window.xid
         players_dir = os.getcwd() + '/players/'
         sys.path.append(players_dir)
         files = os.listdir(players_dir)
@@ -378,7 +380,7 @@ class TVMaxe:
             try:
                 self.mediaPlayer = self.players[backend.lower()]
             except Exception as e:
-                self.mediaPlayer = self.players['mplayer']
+                self.mediaPlayer = self.players.get('mplayer', None)
         else:
             loadmod = __import__('external')
             self.mediaPlayer = loadmod.Player(
